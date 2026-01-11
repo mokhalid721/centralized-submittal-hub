@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <div>
+    <h2 class="mb-0">Submittal {{ submittal.sub_no }}</h2>
+    <div class="text-muted">{{ project.name }}</div>
+  </div>
+  <div class="d-flex gap-2">
+    <a class="btn btn-outline-secondary" href="{{ url_for('project_view', project_id=project.id) }}">Back</a>
+    <a class="btn btn-outline-primary" href="{{ url_for('submittal_zip', submittal_id=submittal.id) }}">Download ZIP</a>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="card p-3">
+      <div class="fw-semibold mb-2">Details</div>
+      <div class="small text-muted">Title</div>
+      <div class="mb-2">{{ submittal.title or "—" }}</div>
+
+      <div class="small text-muted">Spec Section</div>
+      <div class="mb-2">{{ submittal.spec_section or "—" }}</div>
+
+      <div class="small text-muted">Status</div>
+      <div class="mb-2">{{ submittal.status }}</div>
+
+      <div class="small text-muted">Disposition</div>
+      <div class="mb-2">{{ submittal.disposition or "—" }}</div>
+
+      <div class="small text-muted">Responsible</div>
+      <div class="mb-2">{{ submittal.responsible_person or "—" }}</div>
+
+      <div class="small text-muted">Notes</div>
+      <div class="mb-0">{{ submittal.notes or "—" }}</div>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="card p-3">
+      <div class="fw-semibold mb-2">Generated Documents</div>
+      <div class="list-group">
+        {% for d in docs %}
+          <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+             href="{{ url_for('download_file') }}?path={{ d.file_path }}">
+            <span>{{ d.doc_type }}</span>
+            <span class="text-muted small">{{ d.created_at.strftime("%m/%d/%Y %H:%M") }}</span>
+          </a>
+        {% else %}
+          <div class="text-muted">No documents yet.</div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="card p-3 mt-3">
+      <div class="fw-semibold mb-2">Attachments</div>
+      <div class="list-group">
+        {% for a in attachments %}
+          <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+             href="{{ url_for('download_file') }}?path={{ a.stored_path }}">
+            <span>{{ a.original_filename }}</span>
+            <span class="text-muted small">{{ a.uploaded_at.strftime("%m/%d/%Y %H:%M") }}</span>
+          </a>
+        {% else %}
+          <div class="text-muted">No attachments uploaded.</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

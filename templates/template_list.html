@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <div>
+    <h2 class="mb-0">Templates</h2>
+    <div class="text-muted">{{ project.name }}</div>
+  </div>
+  <a class="btn btn-outline-secondary" href="{{ url_for('project_view', project_id=project.id) }}">Back</a>
+</div>
+
+<div class="card p-3 mb-3">
+  <div class="fw-semibold mb-2">Upload a DOCX template</div>
+  <form method="post" action="{{ url_for('template_upload', project_id=project.id) }}" enctype="multipart/form-data">
+    <div class="row g-2 align-items-end">
+      <div class="col-md-4">
+        <label class="form-label">Name</label>
+        <input class="form-control" name="name" placeholder="e.g., Cover Letter v1">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Type</label>
+        <select class="form-select" name="template_type">
+          <option value="cover">Cover Letter</option>
+          <option value="transmittal">Transmittal</option>
+          <option value="response">Response/Return</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">DOCX File</label>
+        <input class="form-control" type="file" name="template" accept=".docx" required>
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-primary w-100">Upload</button>
+      </div>
+    </div>
+    <div class="text-muted small mt-2">
+      Tip: generate sample templates with <span class="mono">python scripts/make_sample_templates.py</span>.
+    </div>
+  </form>
+</div>
+
+<div class="card p-3">
+  <div class="fw-semibold mb-2">Existing templates</div>
+  <div class="table-responsive">
+    <table class="table table-sm align-middle">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Uploaded</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for t in templates %}
+          <tr>
+            <td>{{ t.name }}</td>
+            <td>{{ t.template_type }}</td>
+            <td>{{ t.created_at.strftime("%m/%d/%Y") }}</td>
+            <td class="d-flex gap-2 justify-content-end">
+              <a class="btn btn-outline-primary btn-sm" href="{{ url_for('template_fields', template_id=t.id) }}">Configure</a>
+              <form method="post" action="{{ url_for('template_delete', template_id=t.id) }}" onsubmit="return confirm('Delete this template?');">
+                <button class="btn btn-outline-danger btn-sm">Delete</button>
+              </form>
+            </td>
+          </tr>
+        {% else %}
+          <tr><td colspan="4" class="text-muted">No templates yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

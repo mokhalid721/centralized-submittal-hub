@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <div>
+    <h2 class="mb-0">Settings</h2>
+    <div class="text-muted">Local storage configuration</div>
+  </div>
+  <a class="btn btn-outline-secondary" href="{{ url_for('dashboard') }}">Back</a>
+</div>
+
+<div class="card p-4">
+  <form method="post">
+    <label class="form-label">Storage Root Folder</label>
+    <input class="form-control" name="storage_root" value="{{ storage_root }}">
+    <div class="text-muted small mt-2">
+      This is where templates, generated docs, attachments, and log exports are saved.
+    </div>
+    <button class="btn btn-primary mt-3">Save</button>
+  </form>
+</div>
+{% endblock %}

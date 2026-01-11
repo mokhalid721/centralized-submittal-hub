@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <div>
+    <h2 class="mb-0">Projects</h2>
+    <div class="text-muted">Create a project, upload templates, generate submittals.</div>
+  </div>
+  <a class="btn btn-primary" href="{{ url_for('project_new') }}">New Project</a>
+</div>
+
+<div class="row g-3">
+  {% for p in projects %}
+    <div class="col-md-6 col-lg-4">
+      <div class="card p-3">
+        <div class="fw-semibold">{{ p.name }}</div>
+        <div class="text-muted small">Contract: {{ p.contract_no or "—" }}</div>
+        <div class="text-muted small">Project #: {{ p.project_number or "—" }}</div>
+        <div class="mt-3">
+          <a class="btn btn-outline-primary btn-sm" href="{{ url_for('project_view', project_id=p.id) }}">Open</a>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="col-12">
+      <div class="card p-4">
+        <div class="text-muted">No projects yet. Click <b>New Project</b> to start.</div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

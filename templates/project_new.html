@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card p-4">
+  <h3 class="mb-3">New Project</h3>
+  <form method="post" action="{{ url_for('project_new_post') }}">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">Project Name *</label>
+        <input class="form-control" name="name" required />
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Contract No</label>
+        <input class="form-control" name="contract_no" />
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Project Number</label>
+        <input class="form-control" name="project_number" />
+      </div>
+    </div>
+    <div class="mt-4">
+      <button class="btn btn-primary">Create Project</button>
+      <a class="btn btn-outline-secondary" href="{{ url_for('dashboard') }}">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

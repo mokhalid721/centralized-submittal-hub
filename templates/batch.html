@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <div>
+    <h2 class="mb-0">Batch Generation</h2>
+    <div class="text-muted">{{ project.name }}</div>
+  </div>
+  <a class="btn btn-outline-secondary" href="{{ url_for('project_view', project_id=project.id) }}">Back</a>
+</div>
+
+<div class="card p-4">
+  <form method="post" enctype="multipart/form-data">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">Cover Letter Template</label>
+        <select class="form-select" name="cover_template_id">
+          <option value="0">— none —</option>
+          {% for t in templates_cover %}
+            <option value="{{ t.id }}">{{ t.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Transmittal Template</label>
+        <select class="form-select" name="trans_template_id">
+          <option value="0">— none —</option>
+          {% for t in templates_trans %}
+            <option value="{{ t.id }}">{{ t.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Date Format Option</label>
+        <select class="form-select" name="date_format">
+          {% for k, label in date_formats %}
+            <option value="{{ k }}">{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Name Format Option</label>
+        <select class="form-select" name="name_format">
+          {% for k, label in name_formats %}
+            <option value="{{ k }}">{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-12">
+        <label class="form-label">CSV File</label>
+        <input class="form-control" type="file" name="csv_file" accept=".csv" required>
+        <div class="text-muted small mt-2">
+          CSV headers should include <span class="mono">Sub_No</span>, plus any placeholders you want to fill.
+        </div>
+      </div>
+
+      <div class="col-12 d-flex justify-content-end gap-2">
+        <a class="btn btn-outline-secondary" href="{{ url_for('project_view', project_id=project.id) }}">Cancel</a>
+        <button class="btn btn-primary">Run Batch</button>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

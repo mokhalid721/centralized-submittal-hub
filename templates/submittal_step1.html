@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <div>
+    <h2 class="mb-0">New Submittal</h2>
+    <div class="text-muted">{{ project.name }} · Step 1 of 2</div>
+  </div>
+  <a class="btn btn-outline-secondary" href="{{ url_for('project_view', project_id=project.id) }}">Back</a>
+</div>
+
+<div class="card p-4">
+  <form method="post" action="{{ url_for('submittal_new_step2', project_id=project.id) }}">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">Cover Letter Template</label>
+        <select class="form-select" name="cover_template_id">
+          <option value="0">— none —</option>
+          {% for t in templates_cover %}
+            <option value="{{ t.id }}">{{ t.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Transmittal Template</label>
+        <select class="form-select" name="trans_template_id">
+          <option value="0">— none —</option>
+          {% for t in templates_trans %}
+            <option value="{{ t.id }}">{{ t.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Submittal No *</label>
+        <input class="form-control" name="sub_no" required placeholder="e.g., 56.1">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Title</label>
+        <input class="form-control" name="title">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Spec Section</label>
+        <input class="form-control" name="spec_section">
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label">Status</label>
+        <select class="form-select" name="status">
+          {% for s in statuses %}
+            <option value="{{ s }}">{{ s }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-8">
+        <label class="form-label">Disposition</label>
+        <select class="form-select" name="disposition">
+          <option value="">—</option>
+          {% for d in dispositions %}
+            <option value="{{ d }}">{{ d }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Responsible Person</label>
+        <input class="form-control" name="responsible">
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Date Format Option</label>
+        <select class="form-select" name="date_format">
+          {% for k, label in date_formats %}
+            <option value="{{ k }}">{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Name Format Option</label>
+        <select class="form-select" name="name_format">
+          {% for k, label in name_formats %}
+            <option value="{{ k }}">{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-12">
+        <label class="form-label">Notes</label>
+        <textarea class="form-control" name="notes" rows="3"></textarea>
+      </div>
+
+      <div class="col-12">
+        <div class="border rounded-4 p-3 bg-white">
+          <div class="fw-semibold">Optional Transmittal Record</div>
+          <div class="form-check mt-2">
+            <input class="form-check-input" type="checkbox" name="create_transmittal" id="create_transmittal">
+            <label class="form-check-label" for="create_transmittal">Create a transmittal record (auto-numbered)</label>
+          </div>
+          <div class="row g-2 mt-2">
+            <div class="col-md-6">
+              <label class="form-label">Sent To</label>
+              <input class="form-control" name="sent_to">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Delivery Method</label>
+              <input class="form-control" name="delivery_method" placeholder="Email / CMIS / etc">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 d-flex justify-content-end gap-2">
+        <a class="btn btn-outline-secondary" href="{{ url_for('project_view', project_id=project.id) }}">Cancel</a>
+        <button class="btn btn-primary">Next → Fill Template Fields</button>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

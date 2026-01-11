@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <div>
+    <h2 class="mb-0">{{ project.name }}</h2>
+    <div class="text-muted">Contract: {{ project.contract_no or "—" }} · Project #: {{ project.project_number or "—" }}</div>
+  </div>
+  <div class="d-flex gap-2">
+    <a class="btn btn-outline-secondary" href="{{ url_for('template_list', project_id=project.id) }}">Templates</a>
+    <a class="btn btn-primary" href="{{ url_for('submittal_new_step1', project_id=project.id) }}">New Submittal</a>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-8">
+    <div class="card p-3">
+      <div class="d-flex align-items-center justify-content-between">
+        <div class="fw-semibold">Submittals</div>
+        <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('export_submittal_log', project_id=project.id) }}">Export CSV</a>
+      </div>
+      <div class="table-responsive mt-2">
+        <table class="table table-sm align-middle">
+          <thead>
+            <tr>
+              <th>Submittal No</th>
+              <th>Title</th>
+              <th>Status</th>
+              <th>Disposition</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for s in submittals %}
+              <tr>
+                <td class="mono">{{ s.sub_no }}</td>
+                <td>{{ s.title or "—" }}</td>
+                <td>{{ s.status }}</td>
+                <td>{{ s.disposition or "—" }}</td>
+                <td><a class="btn btn-outline-primary btn-sm" href="{{ url_for('submittal_view', submittal_id=s.id) }}">Open</a></td>
+              </tr>
+            {% else %}
+              <tr><td colspan="5" class="text-muted">No submittals yet.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card p-3 mt-3">
+      <div class="d-flex align-items-center justify-content-between">
+        <div class="fw-semibold">Transmittals</div>
+        <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('export_submittal_log', project_id=project.id) }}">Export CSV</a>
+      </div>
+      <div class="text-muted small mt-2">
+        Transmittals log is generated when you create submittals with "Create transmittal record" checked.
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="card p-3">
+      <div class="fw-semibold mb-2">Project Settings</div>
+      <form method="post" action="{{ url_for('project_settings_save', project_id=project.id) }}">
+        <div class="mb-2">
+          <label class="form-label">Transmittal Prefix</label>
+          <input class="form-control" name="transmittal_prefix" value="{{ project.transmittal_prefix }}">
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Transmittal Padding</label>
+          <input class="form-control" name="transmittal_padding" type="number" min="1" value="{{ project.transmittal_padding }}">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Revision Style</label>
+          <select class="form-select" name="revision_style">
+            <option value="dot" {% if project.revision_style == "dot" %}selected{% endif %}>56.1 / 56.2 / 56.3</option>
+            <option value="R" {% if project.revision_style == "R" %}selected{% endif %}>56-R1 / 56-R2</option>
+          </select>
+        </div>
+        <button class="btn btn-primary w-100">Save</button>
+      </form>
+    </div>
+
+    <div class="card p-3 mt-3">
+      <div class="fw-semibold mb-2">Batch Generation</div>
+      <div class="text-muted small mb-2">Generate many letters from a CSV.</div>
+      <a class="btn btn-outline-primary w-100" href="{{ url_for('batch_page', project_id=project.id) }}">Open Batch Tool</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

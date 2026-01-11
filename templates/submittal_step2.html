@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <div>
+    <h2 class="mb-0">Fill Template Fields</h2>
+    <div class="text-muted">{{ project.name }} · Step 2 of 2</div>
+  </div>
+  <a class="btn btn-outline-secondary" href="{{ url_for('submittal_new_step1', project_id=project.id) }}">Back</a>
+</div>
+
+<div class="card p-4">
+  <form method="post" action="{{ url_for('submittal_create', project_id=project.id) }}" enctype="multipart/form-data">
+    {% for k, v in carry.items() %}
+      <input type="hidden" name="{{ k }}" value="{{ v }}">
+    {% endfor %}
+
+    <div class="row g-3">
+      <div class="col-12">
+        <div class="alert alert-secondary">
+          Only fill what you need. Empty bullet lines and placeholder-only lines will be removed from the final DOCX.
+        </div>
+      </div>
+
+      {% for f in fields %}
+        <div class="col-md-6">
+          <label class="form-label">
+            {{ f.label }}
+            {% if f.required %}<span class="text-danger">*</span>{% endif %}
+            <span class="text-muted small mono">«{{ f.key }}»</span>
+          </label>
+
+          {% if f.field_type == "textarea" %}
+            <textarea class="form-control" name="field_{{ f.id }}" rows="3">{{ defaults.get(f.key, "") }}</textarea>
+          {% elif f.field_type == "date" %}
+            <input class="form-control" name="field_{{ f.id }}" placeholder="leave blank for auto" value="{{ defaults.get(f.key, "") }}">
+          {% elif f.field_type == "select" %}
+            <select class="form-select" name="field_{{ f.id }}">
+              <option value="">—</option>
+              {% for opt in f._options %}
+                <option value="{{ opt }}" {% if defaults.get(f.key, "") == opt %}selected{% endif %}>{{ opt }}</option>
+              {% endfor %}
+            </select>
+          {% else %}
+            <input class="form-control" name="field_{{ f.id }}" value="{{ defaults.get(f.key, "") }}">
+          {% endif %}
+        </div>
+      {% endfor %}
+
+      <div class="col-12">
+        <label class="form-label">Attachments (optional)</label>
+        <input class="form-control" type="file" name="attachments" multiple>
+      </div>
+
+      <div class="col-12 d-flex justify-content-end gap-2">
+        <a class="btn btn-outline-secondary" href="{{ url_for('project_view', project_id=project.id) }}">Cancel</a>
+        <button class="btn btn-primary">Generate Documents</button>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}
